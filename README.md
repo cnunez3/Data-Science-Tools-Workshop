@@ -29,8 +29,8 @@ Dynamic documents, usually named notebooks, are extremely powerful and versatile
 
 How should you structure your workflow? How can you make sure that your code is not only running but is not changing outputs down the line? Unit testing is a way of implementing safeguards to dropping observations or variables when you shouldn’t
 
-# 1. Navigating your project workflow
-# 2. Unit testing in Stata
-# 3. Unit testing in R
-# 4. Unit testing in Python
+  1. Navigating your project workflow
+  2. Unit testing in Stata
+  3. Unit testing in R
+  4. Unit testing in Python
 
