@@ -1,0 +1,13 @@
+---
+title: "Version Control"
+author: "Fabien Forge"
+date: "08/10/2021"
+knit: (function(inputFile, encoding) {
+    rmarkdown::render(inputFile, encoding = encoding, output_dir = "./../../Presentations/Day 1 - Version Control")
+  })
+output: beamer_presentation
+---
+
+# Motivation
+hi
+
