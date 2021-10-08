@@ -38,19 +38,153 @@ output: beamer_presentation
   - Stata and R for causal inference regressions
   
 # Motivation
-- Data s
+- Data science is a portmanteau word which covers many disciplines
+
+- The tools used in data science are generally derived from the needs of developers and people using data in production
+
+- This means that not all tools will correspond to our needs
+  - We rarely receive new data everyday that we need to ingest
+  
+- But some of these tools can be very useful to us
   
 # Motivation
 
 ![Source: [ r-bloggers](https://www.r-bloggers.com/2020/07/exploratory-data-analysis-guide/) ](./figures/data_science_workflow.png)
+
+# Open source
+
+- Unlike Stata, R, Python, Google Colab, Github etc. are open source (or at least free)
+  - Although for Github when services are free you may be the product
+  
+- What makes open source so great is that it offers:
+  - great modularity
+  - complementarities
+  - community support
+  
+# (Open) Sources
+
+- For today I was inspired by:
+  - [Grant McDermott](https://github.com/uo-ec607/lectures) from University of Oregon
+  - Free Code Camp [Git and GitHub for Beginners](https://www.youtube.com/watch?v=RGOj5yH7evk&t=8s&ab_channel=freeCodeCamp.org)
+  - [Hadley Wickham](https://r-pkgs.org/git.html#commit-best-practices)
+  
+- All these resources are available for free
+
+- I'm happy to point you towards more resources if you want
+  
+# The tools - Version control
+- We may not use new data every day but we are revisiting our scripts often
+
+- sometimes months pass before we go back to them
+
+- sometimes researchers come in and out of projects
+
+# The tools - Dynamic Documents 
+
+- Code does not have to be detached from text, equations, or the tables and figures it produces
+
+- Being able to bring everything in a single document can be very efficient
+
+- Jupyter and R-markdown works both with Python, R or even Stata
+
+- You can do many things with them including this presentation or personal websites!
+
+# The tools - Unit testing
+- Code always does exactly what it is told to do
+
+- It's not always the same thing as what want it to do
+
+- The need to publish data along with papers makes the need for robust code even greater
 
 # Looks familiar?
 
 \centering
 \includegraphics[height=.8\textheight]{./figures/messy_code.png}
 
+# Git to the rescue
 
-# Exercice 1 - Create 
+- Git is one of the tools one can use to do version control
+
+- It is a way to store information and keep track of modifications in your code
+
+- Paying the fixed cost of learning this tool can prove a very good investment
+
+# GitHub
+
+- You can think of Github as being built on top of Git
+  
+- There are other competitors (Bitbucket, Gitlab...)
+
+- One can absolutely use Git without having access to Github but the latter offers nice additional features
+
+
+# Github for economists
+
+### From software development...
+
+Git and GitHub play a major role in software development 
+
+### ... to scientific research
+- Of course version control helps for organizing your code and work colaboratively
+
+- It is also a key component of open science and reproducibility
+
+- Journals have increasingly strict requirements regarding reproducibility and data access. 
+
+# Github
+
+## What is Github?
+https://github.com/
+
+# Github desktop
+
+## What is Github desktop?
+https://docs.github.com/en/desktop/contributing-and-collaborating-using-github-desktop
+
+# Github lingo - Repository
+
+- A __repository__ is usually used to organize a single project.
+
+- Repositories can contain folders and files, images, videos, spreadsheets, and data sets – anything your project needs.
+
+- Usually it includes a README and you can provide a license file.
+
+# How to create a new repository
+
+- In the upper right corner, next to your avatar or identicon, click  and then select New repository.
+
+- Give a name to your new repository 
+
+- Write a short description
+
+- Select Initialize this repository with a README
+
+# Github lingo - Main and branches
+
+- By default your repository has one branch named __main__
+
+- You should think of main as your best current version
+
+- If you want to edit your code but don't want to lose what you have so far you can create a new branch
+
+- When you create a branch off the main branch you are making a copy of main
+
+- You use branches to experiment and make edits before committing them to main
+
+# Branching
+![](figures/main_branch.png)
+
+# Github lingo - Commits
+
+- On GitHub, saved changes are called __commits__ 
+
+- Each commit has an associated commit message
+  - a description explaining why a particular change was made
+  - commit messages capture the history of your changes
+  - other contributors can understand what you have done and why.
+
+
+# Exercice 1 - Create a repo
 
 - Create a new repository:
   - Go on your [Github page](https://github.com/) and click on the gree button "New"
@@ -115,7 +249,6 @@ output: beamer_presentation
   - Enter: "my second edit"
   - click on commit
   
-# Branching
-![](figures/main_branch.png)
+
 
 
