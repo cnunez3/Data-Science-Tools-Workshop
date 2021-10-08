@@ -142,16 +142,18 @@ knit: (function(inputFile, encoding) {
 
 # Github for economists
 
-### From software development...
+- __A tool for developers__
 
-Git and GitHub play a major role in software development 
+- Git and GitHub play a major role in software development 
+- And data science in production
 
-### ... to scientific research
-- Of course version control helps for organizing your code and work colaboratively
+- __and for research__
+- Version control helps for organizing your code __and__ work colaboratively
 
 - It is also a key component of open science and reproducibility
 
 - Journals have increasingly strict requirements regarding reproducibility and data access. 
+
 
 # Github
 
