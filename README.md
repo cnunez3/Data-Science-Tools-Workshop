@@ -20,7 +20,15 @@ Version control is a structured way of creating, storing and editing code while 
 Dynamic documents, usually named notebooks, are extremely powerful and versatile tools. They allow users to mix code with text (including Latex and HTML). They can be used with any statistical language (Python, R, Stata and more) to document the code used and its outputs in a single document. They can also be used to produce presentations, academic papers or even webpages.  
 
   0. Use any notebook with your favorite language
-  1. Dynamic documents using Jupyter and/or Google Colab
+  1. Dynamic documents using Jupyter and/or Google Colab 
+    [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1tKA8zwL-GXMJYVj4vMpaxPUSWqzPd4os?usp=sharing
+)
+or using the follow along version: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/19JdvUIZKqwYJGXUV9QbOL4KLGNGMVNXh?usp=sharing
+)
+
+
+
+
   2. Dynamic documents using R Notebook 
   3. Documenting data work using notebooks
   4. Presentations using notebooks 
