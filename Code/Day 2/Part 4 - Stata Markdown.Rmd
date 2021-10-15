@@ -1,0 +1,59 @@
+---
+title: "StataMarkdown"
+author: "Fabien Forge"
+date: "14/10/2021"
+output: html_document
+---
+
+```{r}
+library(Statamarkdown)
+statapath <- "/Applications/Stata/StataSE.app/Contents/MacOS/stata-se"
+
+
+
+knitr::opts_chunk$set(engine.path=list(stata=statapath),
+  error=TRUE, cleanlog=TRUE, comment=NA)
+
+```
+
+```{stata}
+
+di "Hello 1"
+```
+```{stata, echo=FALSE, cleanlog=FALSE}
+tab1 foreign rep78
+```
+```{stata, echo=1, results="hide"}
+graph box mpg, over(foreign)
+graph export "boxplot.svg", replace
+```
+```{r}
+help(package="Statamarkdown")
+```
+
+```{r}
+library(RStata)
+
+options("RStata.StataPath"=statapath)
+options("RStata.StataVersion"=16)
+
+```
+
+
+```{r}
+stata("di hello")
+```
+
+```{r}
+auto <- stata("sysuse auto", data.out = TRUE)
+```
+
+
+```{r}
+head(auto)
+```
+
+```{r}
+stata("do  reg_nhanes2.do")
+```
+
