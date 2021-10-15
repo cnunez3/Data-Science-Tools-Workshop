@@ -1,0 +1,172 @@
+---
+title: "Dynamic Documents - R Markdown"
+subtitle: "Part 3 - Notebooks using R - Practice"
+author: "Fabien Forge"
+date: "15/10/2021"
+output: html_document
+
+knit: (function(inputFile, encoding) {
+    rmarkdown::render(inputFile, encoding = encoding, output_dir = "./../../Presentations/Day 2 - Dynamic Documents")
+  })
+---
+
+# Practice
+
+- Let's use a (slightly amended) dataset from Nathan Nunn's [website](https://scholar.harvard.edu/nunn/pages/data-0)
+
+- We will use the data from is famous 2008 QJE paper: "The Long-Term Effects of Africa's Slave Trades"
+
+
+## Some libraries  
+```{r, message=F}
+library(tidyverse)
+library(ggplot2)
+library(skimr)
+library(jtools)
+library(huxtable)
+library(sandwich)
+```
+
+
+## Read the data in memory
+
+```{r, results='asis', message=FALSE, out.width="50%"}
+path.url <- "https://www.dropbox.com/s/oluf7cdidu2hq2g/nunn_slave_trade.csv?dl=1"
+
+
+```
+
+## Select columns and Pipe Operator
+
+```{r}
+# select country, gdppercapita, slaveexports, coastline, popdensity, legor_uk, legor_fr
+
+
+```
+
+## Mutate 
+```{r}
+# take log of gdppercapita
+
+
+```
+
+## Groupby and Summarize 
+
+```{r}
+# average gpd per capita per legal origin
+
+
+```
+
+
+# A simple regression
+
+- We will first consider the effect of historical slave exports on countries' per capita GDP in 2000 using a simple linear regression:
+<br><br>
+$Y_i = \beta_0 + \beta_1 X_i + u_i$
+<br><br>
+$\text{GDP}_i = \beta_0 + \beta_1 \text{SlaveExport}_i + u_i$ 
+
+```{r }
+# regress gdppercapita on slaveexports
+
+```
+
+
+
+# Heteroskedastic-Robust Standard Errors
+```{r }
+
+```
+
+
+# An additional regressor
+
+
+- Might the length of a country's coastline (normalized by its area) be an omitted variable here?
+  - why?
+
+```{r}
+
+
+```
+
+
+
+
+# A third regressor
+```{r}
+
+
+```
+
+
+
+# A fourth regressor
+- Might the country's legal system inherited from colonial times be an OVB here?
+  - why?
+
+```{r}
+
+
+```
+
+
+
+
+# Creating regression tables
+- There are many solutions in R to create regression tables
+<br><br>
+- Today we will use the export_summ() function built on huxtable and jtools packages
+
+# Gather model estimations
+
+- Say that you want to present our first vs our third regression
+
+```{r }
+
+```
+
+
+# Model names
+
+```{r }
+
+```
+
+
+# Stars
+- Let's use the thresholds traditionally used in development
+
+```{r }
+
+
+```
+
+
+
+# Do not report the intercept
+```{r }
+
+
+```
+
+
+# Let's add the F-statistic
+
+- And the associated p-value
+
+```{r }
+
+```
+
+
+# Add a third model
+
+```{r }
+
+
+```
+
+

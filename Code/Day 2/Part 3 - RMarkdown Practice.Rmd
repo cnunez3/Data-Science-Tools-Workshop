@@ -1,0 +1,191 @@
+---
+title: "Dynamic Documents - R Markdown"
+subtitle: "Part 3 - Notebooks using R - Practice"
+author: "Fabien Forge"
+date: "15/10/2021"
+output: html_document
+
+knit: (function(inputFile, encoding) {
+    rmarkdown::render(inputFile, encoding = encoding, output_dir = "./../../Presentations/Day 2 - Dynamic Documents")
+  })
+---
+
+# Practice
+
+- Let's use a (slightly amended) dataset from Nathan Nunn's [website](https://scholar.harvard.edu/nunn/pages/data-0)
+
+- We will use the data from is famous 2008 QJE paper: "The Long-Term Effects of Africa's Slave Trades"
+
+
+## Some libraries  
+```{r, message=F}
+library(tidyverse)
+library(ggplot2)
+library(skimr)
+library(jtools)
+library(huxtable)
+library(sandwich)
+```
+
+
+## Read the data in memory
+
+```{r, results='asis', message=FALSE, out.width="50%"}
+df <- read_csv("https://www.dropbox.com/s/oluf7cdidu2hq2g/nunn_slave_trade.csv?dl=1")
+# select the variables we will be using for this class
+head(df)
+```
+
+## Select columns and Pipe Operator
+
+```{r}
+# select country, gdppercapita, slaveexports, coastline, popdensity, legor_uk, legor_fr
+df <- df %>% select(country, gdppercapita, slaveexports, coastline, popdensity, legor_uk, legor_fr)
+head(df)
+```
+
+## Mutate 
+```{r}
+# take log of gdppercapita
+df <- df %>% mutate(ln_gdgpc=log(gdppercapita))
+head(df)
+```
+
+## Groupby and Summarize 
+
+```{r}
+df %>% group_by(legor_uk) %>% 
+  summarise(mean_gdp=mean(gdppercapita))
+```
+
+
+# A simple regression
+
+- We will first consider the effect of historical slave exports on countries' per capita GDP in 2000 using a simple linear regression:
+<br><br>
+$Y_i = \beta_0 + \beta_1 X_i + u_i$
+<br><br>
+$\text{GDP}_i = \beta_0 + \beta_1 \text{SlaveExport}_i + u_i$ 
+
+```{r }
+# regress gdppercapita on slaveexports
+results <- lm("gdppercapita ~ slaveexports", data=df)
+
+summary(results)
+```
+
+
+
+# Heteroskedastic-Robust Standard Errors
+```{r }
+results <- lm("gdppercapita ~ slaveexports", data=df)
+
+summ(results, robust = 'HC1')
+```
+
+
+# An additional regressor
+
+
+- Might the length of a country's coastline (normalized by its area) be an omitted variable here?
+  - why?
+
+```{r}
+results2 <- lm( "gdppercapita ~ slaveexports + coastline", data=df)
+summ(results2, robust = 'HC1')
+```
+
+
+
+
+# A third regressor
+```{r}
+
+results3 <- lm( "gdppercapita ~ slaveexports + coastline+ popdensity", data=df )
+summ(results3, robust = 'HC1')
+```
+
+
+
+# A fourth regressor
+- Might the country's legal system inherited from colonial times be an OVB here?
+  - why?
+
+```{r}
+results4 <- lm( "gdppercapita ~ slaveexports + coastline+ popdensity + legor_uk", data=df )
+summ(results4, robust = 'HC1')
+```
+
+
+
+
+# Creating regression tables
+- There are many solutions in R to create regression tables
+<br><br>
+- Today we will use the export_summ() function built on huxtable and jtools packages
+
+# Gather model estimations
+
+- Say that you want to present our first vs our third regression
+
+```{r }
+export_summs(results, results3, robust='HC1')
+```
+
+
+# Model names
+
+```{r }
+export_summs(results, results3, model.names = c("Simple Regression", "Multiple Regression"), robust='HC1')
+
+```
+
+
+# Stars
+- Let's use the thresholds traditionally used in development
+
+```{r }
+export_summs(results, results3, model.names = c("Simple Regression", "Multiple Regression"), stars = c('***' = 0.01, '**' = 0.05, '*' = 0.1), robust='HC1')
+
+```
+
+
+
+# Do not report the intercept
+```{r }
+export_summs(results, results3, model.names = c("Simple Regression", "Multiple Regression"), stars = c('***' = 0.01, '**' = 0.05, '*' = 0.1), omit_coefs='(Intercept)', robust='HC1')
+
+```
+
+
+# Let's add the F-statistic
+
+- And the associated p-value
+
+```{r }
+export_summs(results, results3, 
+             model.names = c("Simple Regression", "Multiple Regression"), 
+             stars = c('***' = 0.01, '**' = 0.05, '*' = 0.1), 
+             omit_coefs='(Intercept)',
+             statistics = c('N' = 'nobs', 'R squared' = 'r.squared', 'F statistic' = 'statistic',
+  'P value' = 'p.value'), 
+  robust='HC1')
+```
+
+
+# Add a third model
+
+```{r }
+export_summs(results, results3, results4,
+             model.names = c("(1)\nGDP/Capita", "(2)\nGDP/Capita","(3)\nGDP/Capita" ), # rename column titles
+             stars = c('***' = 0.01, '**' = 0.05, '*' = 0.1), # change significance stars
+             omit_coefs='(Intercept)', # remove the intercept
+             statistics = c('Observations' = 'nobs', 'R squared' = 'r.squared', 'F statistic' = 'statistic',
+  'P value' = 'p.value'), # list the statistics to be used at the bottom of the table
+  coefs = c("Slave Exports" = "slaveexports", "Coastline" = "coastline", "Pop. Density" ="popdensity", "UK law"="legor_uk"), # Rename variable names 
+  robust='HC1' # heteroskedastic-robust SEs
+  )
+
+```
+
+
