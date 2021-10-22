@@ -33,7 +33,9 @@ library(sandwich)
 ```{r, results='asis', message=FALSE, out.width="50%"}
 path.url <- "https://www.dropbox.com/s/oluf7cdidu2hq2g/nunn_slave_trade.csv?dl=1"
 
+df <- read.csv(path.url)
 
+head(df)
 ```
 
 ## Select columns and Pipe Operator
@@ -41,6 +43,8 @@ path.url <- "https://www.dropbox.com/s/oluf7cdidu2hq2g/nunn_slave_trade.csv?dl=1
 ```{r}
 # select country, gdppercapita, slaveexports, coastline, popdensity, legor_uk, legor_fr
 
+df <- df %>% select(country, gdppercapita, slaveexports, coastline, popdensity, legor_uk, legor_fr)
+head(df)
 
 ```
 
@@ -48,14 +52,16 @@ path.url <- "https://www.dropbox.com/s/oluf7cdidu2hq2g/nunn_slave_trade.csv?dl=1
 ```{r}
 # take log of gdppercapita
 
-
+df <- df %>% mutate(ln_gdgpc=log(gdppercapita))
+head(df)
 ```
 
 ## Groupby and Summarize 
 
 ```{r}
 # average gpd per capita per legal origin
-
+df %>% group_by(legor_uk) %>% 
+  summarise(mean_gdp=mean(gdppercapita))
 
 ```
 
@@ -70,14 +76,16 @@ $\text{GDP}_i = \beta_0 + \beta_1 \text{SlaveExport}_i + u_i$
 
 ```{r }
 # regress gdppercapita on slaveexports
-
+results <- lm("gdppercapita ~ slaveexports", data=df)
+summary(results)
 ```
 
 
 
 # Heteroskedastic-Robust Standard Errors
 ```{r }
-
+results <- lm("gdppercapita ~ slaveexports", data=df)
+summ(results, robust = 'HC1')
 ```
 
 
@@ -89,7 +97,8 @@ $\text{GDP}_i = \beta_0 + \beta_1 \text{SlaveExport}_i + u_i$
 
 ```{r}
 
-
+results2 <- lm( "gdppercapita ~ slaveexports + coastline", data=df)
+summ(results2, robust = 'HC1')
 ```
 
 
@@ -97,21 +106,19 @@ $\text{GDP}_i = \beta_0 + \beta_1 \text{SlaveExport}_i + u_i$
 
 # A third regressor
 ```{r}
-
-
+results3 <- lm( "gdppercapita ~ slaveexports + coastline+ popdensity", data=df )
+summ(results3, robust = 'HC1')
+results4 <- lm( "gdppercapita ~ slaveexports + coastline+ popdensity + legor_uk", data=df )
+summ(results4, robust = 'HC1')
 ```
 
 
 
-# A fourth regressor
-- Might the country's legal system inherited from colonial times be an OVB here?
-  - why?
+
 
 ```{r}
-
-
+export_summs(results, results3, model.names = c("Simple Regression", "Multiple Regression"), robust='HC1')
 ```
-
 
 
 

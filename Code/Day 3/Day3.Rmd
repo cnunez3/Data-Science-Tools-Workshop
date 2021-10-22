@@ -1,0 +1,1518 @@
+---
+title: "Quality Control"
+subtitle: "Data Science Tools Workshop"
+author: "Fabien Forge"
+date: "22/10/2021"
+output: slidy_presentation
+
+knit: (function(inputFile, encoding) {
+    rmarkdown::render(inputFile, encoding = encoding, output_dir = "./../../Presentations/Day 3 - Quality Control")
+  })
+---
+
+# Quality Control
+
+-   There are two sorts of issues that can make reproduction fail
+
+-    1.  The structure of your work environment makes it very hard to take over
+
+-    2.  There are errors in your code
+
+# Quality Control, continued
+
+-   The data science community has developed some standards and technique to deal with these issues
+
+-   1.  Standards on how to build a workspace
+
+-   2.  Unit testing to put checks on your code
+
+# Workspace
+
+- You probably already use a structure for your projects
+  - i.e. hopefully your data is not in download and your scripts on your desktop
+
+- For replication, the organization of these folders matters
+
+- Creating folders on the fly may also not be optimal
+
+- Let's learn how to create a proper workspace suited for data work
+
+# Path
+
+- Your computer organizes folders and files in a tree-like fashion
+
+- Think of an upside down tree. The top of the tree is the `root`
+
+- Your file leaves a certain number of branches away from the root
+
+- This is why we talk about a `path`
+
+# Path 
+- Folders are separated by slashes
+  - backward slashes in Windows `\`
+  - forward slashes in Unix, Linux `/`
+
+- After each slash you either find a `directory` name or a file name
+  - A directory is the same thing as a folder
+
+# Path
+
+**Windows:**
+
+```
+E:\Data\MyStuff #(path terminating in a directory name)
+E:\Data\MyStuff\workfile.csv  #(path terminating in a file name)
+```
+
+**Unix - Lixux:**
+```bash
+~/Dropbox/McGill/Data Science Workshop/Data-Science-Tools-Workshop/Presentations # (path terminating in a directory name)
+/Users/forgef/Dropbox/McGill/Data Science Workshop/Data-Science-Tools-Workshop/Presentations/Day3.html  #(path terminating in a file name)
+```
+
+# Absolute or Full Path
+
+- When you write down a path from the root to the end file we talk about a **full path**
+
+- A full path is the least sharable path that you can use
+
+- You can't pass it to another person easily
+  - You can't pass it to your next laptop easily!
+
+# Relative path  
+- A **relative path** refers to a location that is relative to a **current directory**
+
+- Relative paths make use of two special symbols:
+  - dot (`.`)  - `current directory`
+  - double-dot (`..`), `parent directory`
+
+- **Double dots** are used for **moving up** in the hierarchy.
+- A **single dot** represents the **current** directory itself.
+
+# Current directory
+
+- Everytime you open a script a default `current directory` is associated to it
+
+- By default, the current directory usually corresponds to where your script is open
+
+- You can ask your statistical software of choice or the shell (command line) to display the current directory
+
+# What is my current directoy?
+
+**Windows**, `cd` for current directory
+```
+cd
+```
+
+**Mac**, **Stata**, `pwd` for print work directory
+```
+pwd
+```
+
+**R**, `getwd()` for get work directory
+```
+getwd()
+```
+
+**Python** `os.getcwd()` or start a shell command using `!`
+```
+import os
+os.getcwd()
+
+!pwd 
+!cd
+
+```
+
+# Setting the work directory
+**Windows**, `cd` for current directory + `<PATH>`
+```
+cd D:\Root\ParentFolder\FinalFolder
+```
+
+**Mac**, **Stata**, `cd` for change directory
+```
+cd ~/ParentFolder/FinalFolder
+```
+
+**R**, `setwd()` for set work directory
+```
+setwd("c:/Documents/my/working/directory") # windows
+setwd("/path/to/my/directory") # unix
+```
+
+**Python** `os.getcwd()` or start a shell command using `!`
+```
+import os
+os.chdir()
+
+%cd
+
+```
+
+# Demonstration in the Shell
+
+
+Let's open up our Bash shell. 
+
+A convenient way to do this is through [RStudio's built-in Terminal](https://support.rstudio.com/hc/en-us/articles/115010737148-Using-the-RStudio-Terminal).
+
+- Hitting `Shift`+`Alt`+`T` will cause a "Terminal" tab to open up in the bottom-left window pane (i.e. next to the "Console" tab).
+- This should run Bash by default if it is installed on your system. (Windows users see [here](https://www.laptopmag.com/articles/use-bash-shell-windows-10).)
+
+--
+
+</br>
+
+P.S. Of course, it's always possible to open up the Bash shell directly if you prefer.
+- [Linux](https://www.wikihow.com/Open-a-Terminal-Window-in-Ubuntu)
+- [Mac](https://www.techwalla.com/articles/how-to-open-terminal-on-a-macbook)
+- [Windows](https://www.howtogeek.com/265900/everything-you-can-do-with-windows-10s-new-bash-shell/)
+
+---
+
+# First look (cont.)
+
+You should see something like:
+
+```bash
+ username@hostname:~$
+```
+
+
+This is shell-speak for: "Who am I and where am I?"
+  - Type in `$ whoami` without the leading dollar sign to confirm. 
+
+
+
+---
+
+# First look (cont.)
+
+You should see something like:
+
+```bash
+ `username`@hostname:~$ 
+```
+
+This is shell-speak for: "Who am I and where am I?"
+
+- `username` denotes a specific user (one of potentially many on this computer). 
+
+
+---
+
+# First look (cont.)
+
+You should see something like:
+
+```bash
+ username`@hostname`:~$ 
+```
+
+This is shell-speak for: "Who am I and where am I?"
+
+- `username` denotes a specific user (one of potentially many on this computer). 
+
+- `@hostname` denotes the name of the computer or server.
+
+---
+
+# First look (cont.)
+
+You should see something like:
+
+```bash
+ username@hostname`:~`$ 
+```
+
+This is shell-speak for: "Who am I and where am I?"
+
+- `username` denotes a specific user (one of potentially many on this computer). 
+
+- `@hostname` denotes the name of the computer or server.
+
+- `:~` denotes the directory path (where `~` signifies the user's home directory).
+
+
+---
+
+# First look (cont.)
+
+You should see something like:
+
+```bash
+ username@hostname:~`$`
+```
+
+This is shell-speak for: "Who am I and where am I?"
+
+- `username` denotes a specific user (one of potentially many on this computer). 
+
+- `@hostname` denotes the name of the computer or server.
+
+- `:~` denotes the directory path (where `~` signifies the user's home directory).
+
+- `$` denotes the start of the command prompt.
+  - For a special "superuser" called root, the dollar sign will change to a `#`.
+
+---
+
+# Useful keyboard shortcuts
+
+- `Tab` completion.
+
+- Use the `↑` (and `↓`) keys to scroll through previous commands.
+
+- `Ctrl`+`→` (and `Ctrl`+`←`) to skip whole words at a time.
+
+- `Ctrl`+`a` moves the cursor to the beginning of the line.
+
+- `Ctrl`+`e` moves the cursor to the end of the line.
+
+- `Ctrl`+`k` deletes everything to the right of the cursor.
+
+- `Ctrl`+`u` deletes everything to the left of the cursor.
+
+- `Ctrl`+`Shift`+`c` to copy and `Ctrl`+`Shift`+`v` to paste.
+
+- `clear` to clear your terminal.
+
+---
+
+# Syntax
+
+All Bash commands have the same basic syntax:
+
+<center>command option(s) argument(s)</center>
+
+Examples:
+
+  ```bash
+  $ ls -lh ~/Documents/
+  ```
+  ```bash
+  $ sort -u myfile.txt
+  ```
+
+---
+
+# Syntax
+
+All Bash commands have the same basic syntax:
+
+**<center><span style='background: #ffff88;'>command</span> option(s) argument(s)</center>**
+
+Examples:
+
+  ```bash
+  $ `ls` -lh ~/Documents/
+  ```
+  ```bash
+  $ `sort` -u myfile.txt
+  ```
+
+---
+ 
+
+# Syntax
+
+All Bash commands have the same basic syntax:
+
+<center>command <span style='background: #ffff88;'>option(s)</span> argument(s)</center>
+
+Examples:
+
+  ```bash
+  $ ls `-lh` ~/Documents/
+  ```
+  ```bash
+  $ sort `-u` myfile.txt
+  ```
+
+
+---
+ 
+
+# Syntax
+
+All Bash commands have the same basic syntax:
+
+<center>command option(s) <span style='background: #ffff88;'>argument(s)</span></center>
+
+Examples:
+
+  ```bash
+  $ ls -lh `~/Documents/`
+  ```
+  ```bash
+  $ sort -u `myfile.txt`
+  ```
+
+---
+
+# Syntax
+
+All Bash commands have the same basic syntax:
+
+<center>command option(s) argument(s)</center>
+
+Examples:
+
+  ```bash
+  $ ls -lh ~/Documents/
+  ```
+  ```bash
+  $ sort -u myfile.txt
+  ```
+
+</br>
+
+**commands**
+- You don't always need options or arguments. (E.g. `$ ls ~/Documents/` and `$ ls -lh` are both valid commands that will yield output.)
+- However, you always need a command.
+
+---
+
+# Syntax (cont.)
+
+**options** (also called **flags**)
+
+- Start with a dash.
+- Usually one letter.
+- Multiple options can be chained together under a single dash.
+
+  ```bash
+  $ ls -l -a -h /var/log ## This works
+  $ ls -lah /var/log ## So does this
+  ```
+
+
+**arguments**
+- Tell the command *what* to operate on.
+- Usually a file, path, or a set of files and folders.
+
+---
+
+# Help: man
+
+The `man` command ("manual pages") is your friend if you ever need help.
+
+- Tip: Hit spacebar to scroll down a page at a time, "h" to see the help notes of the `man` command itself and "q" to quit.
+
+```bash
+man ls
+```
+
+---
+
+# Help: man (cont.)
+
+A useful feature of `man` is quick pattern searching with "/pattern".
+
+- Try this now by running `$ man ls` again and then typing "/human" and hitting the return key. 
+
+- To continue on to the next case, hit `n`. (It won't work here because the pattern "human" only occurs once in the manual file.)
+
+--
+
+</br>
+
+- Again, this and other `man` tricks
+
+- They are detailed in the help pages (hit "h").
+
+---
+
+# Help: cheat
+
+- The [cheat](https://github.com/chrisallenlane/cheat) utility provides a more readable summary 
+
+- cheatsheet of various command. You'll need to install it first. (Linux and MacOS only.)
+
+```bash
+$ cheat ls
+
+## # Displays everything in the target directory
+## ls path/to/the/target/directory
+## 
+## # Displays everything including hidden files
+## ls -a
+## 
+## # Displays all files, along with the size (with unit suffixes) and timestamp
+## ls -lh 
+## 
+## # Display files, sorted by size
+## ls -S
+## 
+## # Display directories only
+## ls -d */
+## 
+## # Display directories only, include hidden
+## ls -d .*/ */
+```
+
+
+---
+
+# Navigation
+
+Key navigation commands:
+
+- `pwd` to print (the current) working directory.
+
+- `cd` to change directory.
+
+```
+pwd
+```
+
+--
+
+You can use absolute paths, but it's better to use relative paths and invoke special symbols for a user's home folder (`~`), current directory (`.`), and parent directory (`..`) as needed. 
+
+```
+cd examples ## Move into the "examples" sub-directory of this lecture directory.
+cd ../.. ## Now go back up two directories.
+pwd
+```
+
+---
+
+# Navigation (cont.)
+
+Beware of directory names that contain spaces. Say you have a directory called "My Documents". (I'm looking at you, Windows.)
+
+- Why won't `$ cd My Documents` work?
+
+--
+
+**Answer:** Bash syntax is super pedantic about spaces and ordering. Here it thinks that "My" and "Documents" are separate arguments.
+
+--
+
+  - Small brain: Use quotation marks: `$ cd "My Documents"`.
+
+  - Big brain: Use Tab completion to automatically "escape" the space: `$ cd My\ Documents`. 
+  
+  - Galaxy brain: Don't use spaces in file and folder names.
+
+---
+
+# Github
+
+- Let's navigate through our files using the same structure
+
+- We will (once more) use the terrific material by [Grant McDermott](https://github.com/forgef/lectures/commits?author=grantmcdermott)
+
+- I put in the repository of this workshop a new folder called `bash`
+
+- Pull my changes or simply clone again this project
+
+
+
+---
+
+# Listing files and their properties
+
+- change your current directory to `bash`
+
+- Now list the contents of the  `examples/` sub-directory with the `-lh` option ("long format", "human readable").
+
+```bash 
+# cd PathWhereYouClonedThisRepo/lectures/03-shell ## change as needed
+ls -lh examples
+```
+
+---
+
+# Listing files and their properties (cont.)
+
+What does this all mean? Let's focus on the top line.
+
+```
+drwxr-xr-x 2 grant users 4.0K Jan 12 22:12 ABC
+```
+
+---
+
+
+# Listing files and their properties (cont.)
+
+What does this all mean? Let's focus on the top line.
+
+<p span style="font-family:Fira Code; font-size:80%; color: #333; background: #f8f8f8; padding: 0.5em;";>
+<span style='background: #ffff88;'>d</span>rwxr-xr-x 2 grant users 4.0K Jan 12 22:12 ABC</span>
+
+- The first column denotes the object type:
+  - `d` (directory or folder), `l` (link), or `-` (file)
+
+---
+
+ 
+
+# Listing files and their properties (cont.)
+
+What does this all mean? Let's focus on the top line.
+
+<p span style="font-family:Fira Code; font-size:80%; color: #333; background: #f8f8f8; padding: 0.5em;";>d<span style='background: #ffff88;'><span style='color: #e41a1c;'>rwx</span><span style='color: #377eb8;'>r-x</span><span style='color: #4daf4a;'>r-x</span></span> 2 grant users 4.0K Jan 12 22:12 ABC</span>
+
+- <span style='color: #A9A9A9;'>The first column denotes the object type:
+  - `d` (directory or folder), `l` (link), or `-` (file)</span>
+- Next, we see the permissions associated with the object's three possible user types: 1) <span style='color: #e41a1c;'>owner</span>, 2) <span style='color: #377eb8;'>the owner's group</span>, and 3) <span style='color: #4daf4a;'>all other users</span>.
+  - Permissions reflect `r` (read), `w` (write), or `x` (execute) access.
+  - <b>`-`</b> denotes missing permissions for a class of operations.
+
+---
+ 
+
+# Listing files and their properties (cont.)
+
+What does this all mean? Let's focus on the top line.
+
+<p span style="font-family:Fira Code; font-size:80%; color: #333; background: #f8f8f8; padding: 0.5em;";>drwxr-xr-x <span style='background: #ffff88;'>2</span> grant users 4.0K Jan 12 22:12 ABC</span>
+
+- <span style='color: #A9A9A9;'>The first column denotes the object type:
+  - `d` (directory or folder), `l` (link), or `-` (file)</span>
+- <span style='color: #A9A9A9;'>Next, we see the permissions associated with the object's three possible user types: 1) owner, 2) the owner's group, and 3) all other users.
+  - Permissions reflect `r` (read), `w` (write), or `x` (execute) access.
+  - <b>`-`</b> denotes missing permissions for a class of operations.</span>
+- The number of [hard links](http://www.giannistsakiris.com/2011/04/15/counting-and-listing-hard-links-on-linux/) to the object.
+
+---
+ 
+
+# Listing files and their properties (cont.)
+
+What does this all mean? Let's focus on the top line.
+
+<p span style="font-family:Fira Code; font-size:80%; color: #333; background: #f8f8f8; padding: 0.5em;";>drwxr-xr-x 2 <span style='background: #ffff88;'><span style='color: #e41a1c;'>grant</span> <span style='color: #377eb8;'>users</span></span> 4.0K Jan 12 22:12 ABC</span>
+
+- <span style='color: #A9A9A9;'>The first column denotes the object type:
+  - `d` (directory or folder), `l` (link), or `-` (file)</span>
+- <span style='color: #A9A9A9;'>Next, we see the permissions associated with the object's three possible user types: 1) owner, 2) the owner's group, and 3) all other users.
+  - Permissions reflect `r` (read), `w` (write), or `x` (execute) access.
+  - <b>`-`</b> denotes missing permissions for a class of operations.</span>
+- <span style='color: #A9A9A9;'>The number of hard links to the object.</span>
+- We also see the identity of the object's <span style='color: #e41a1c;'>owner</span> and their <span style='color: #377eb8;'>group</span>.
+
+---
+ 
+
+# Listing files and their properties (cont.)
+
+What does this all mean? Let's focus on the top line.
+
+<p span style="font-family:Fira Code; font-size:80%; color: #333; background: #f8f8f8; padding: 0.5em;";>drwxr-xr-x 2 grant users <span style='background: #ffff88;'>4.0K Jan 12 22:12 ABC</span></span>
+
+- <span style='color: #A9A9A9;'>The first column denotes the object type:
+  - `d` (directory or folder), `l` (link), or `-` (file)</span>
+- <span style='color: #A9A9A9;'>Next, we see the permissions associated with the object's three possible user types: 1) owner, 2) the owner's group, and 3) all other users.
+  - Permissions reflect `r` (read), `w` (write), or `x` (execute) access.
+  - <b>`-`</b> denotes missing permissions for a class of operations.</span>
+- <span style='color: #A9A9A9;'>The number of hard links to the object.</span>
+- <span style='color: #A9A9A9;'>We also see the identity of the object's owner and their group.</span>
+- Finally, we see some descriptive elements about the object: 
+  - Size, date and time of creation, and the object name.
+
+---
+ 
+
+# Listing files and their properties (cont.)
+
+What does this all mean? Let's focus on the top line.
+
+```bash
+drwxr-xr-x 2 grant users 4.0K Jan 12 22:12 ABC
+```
+
+- The first column denotes the object type:
+  - `d` (directory or folder), `l` (link), or `-` (file)
+- Next, we see the permissions associated with the object's three possible user types: 1) owner, 2) the owner's group, and 3) all other users.
+  - Permissions reflect `r` (read), `w` (write), or `x` (execute) access.
+  - <b>`-`</b> denotes missing permissions for a class of operations.
+- The number of hard links to the object.
+- We also see the identity of the object's owner and their group.
+- Finally, we see some descriptive elements about the object: 
+  - Size, date and time of creation, and the object name.
+
+
+---
+
+# Create: touch and mkdir
+
+One of the most common shell tasks is object creation (files, directories, etc.)
+
+We use `mkdir` to create directories. E.g. To create a new "testing" directory:
+```{bash mkdir}
+mkdir testing
+```
+
+We use `touch` to create (empty) files. E.g. To add some files to our new directory:
+```{bash touch}
+touch testing/test1.txt testing/test2.txt testing/test3.txt
+```
+
+--
+
+Check that it worked:
+```{bash}
+ls testing
+```
+
+---
+
+# Remove: rm and rmdir
+
+Let's delete the objects that we just created. Start with one of the .txt files, by using `rm`.
+- We could delete all the files at the same time, but you'll see why I want to keep some.
+
+```{bash rm1}
+rm testing/test1.txt
+```
+
+The equivalent command for directories is `rmdir`.
+```{bash rmdir, error=T}
+rmdir testing
+```
+
+---
+
+# Remove: rm and rmdir
+
+Uh oh... It won't let us delete the directory while it still has files inside of it. The solution is to use the `rm` command again with the "recursive" (`-r` or `-R`) and "force" (`-f`) options. 
+- Excluding the `-f` option is safer, but will trigger a confirmation prompt for every file, which I'd rather avoid here.
+
+```{bash rm2, error=T}
+rm -rf testing ## Success
+```
+
+---
+
+# Copy: cp
+
+The syntax for copying is `$ cp object path/copyname`
+
+- If you don't provide a new name for the copied object, it will just take the old name.
+
+- However, if there is already an object with the same name in the target destination, then you'll have to use `-f` to force an overwrite.
+
+```
+## Create new "copies" sub-directory
+mkdir examples/copies
+## Now copy across a file (with a new name)
+cp examples/reps.txt examples/copies/reps-copy.txt
+## Show that we were successful
+ls examples/copies
+```
+
+--
+
+You can use `cp` to copy directories, although you'll need the `-r` (or `-R`) flag if you want to recursively copy over everything inside of it to. 
+- Try this by copying over the `meals/` sub-directory to `copies/`.
+
+---
+
+# Move (and rename): mv 
+
+The syntax for moving is `$ mv object path/newobjectname` 
+
+```
+## Move the abc.txt file and show that it worked
+mv examples/ABC/abc.txt examples
+ls examples/ABC ## empty
+```
+```
+## Move it back again
+mv examples/abc.txt examples/ABC
+ls examples/ABC ## not empty
+```
+
+--
+
+Note that "moving" an object within the same directory, but with the (newobjectname) option, is effectively the same as renaming it.
+
+```
+ ## Rename reps-copy to reps2 by "moving" it with a new name
+mv examples/copies/reps-copy.txt examples/copies/reps2.txt
+ls examples/copies
+```
+
+---
+
+# Rename _en masse_: rename
+
+Speaking of renaming, a more convenient way to do this is with `rename`. 
+- The syntax is `pattern replacement file(s)`
+
+For example, say we want to change the file type (i.e. extension) of a particular file in the `examples/meals` directory.
+
+```
+rename csv TXT examples/meals/monday.csv
+ls examples/meals
+```
+
+---
+
+# Rename _en masse_: rename (cont.)
+
+Where `rename` really shines, however, is in conjunction with regular expressions and wildcards (more on the next slide).
+- This works especially well for dealing with a whole list of files or folders.
+
+For example, let's change _all_ of the file extensions in the `examples/meals` directory.
+
+```
+rename csv TXT examples/meals/*
+ls examples/meals
+```
+
+--
+
+Better change them back before we continue. (Confirm that this worked for yourself.)
+
+```
+rename TXT csv examples/meals/*
+```
+
+---
+
+# Wildcards
+
+[Wildcards](http://tldp.org/LDP/GNU-Linux-Tools-Summary/html/x11655.htm) are special characters that can be used as a replacement for other characters. The two most important ones are:
+
+1. Replace any number of characters with `*`. 
+ - Convenient when you want to copy, move, or delete a whole class of files.
+```
+  cp examples/*.sh examples/copies ## Copy any file with an .sh extension to "copies"
+  rm examples/copies/* ## Delete everything in the "copies" directory
+```
+
+2. Replace a single character with `?`
+ - Convenient when you want to discriminate between similarly named files.
+ 
+```
+  ls examples/meals/??nday.csv
+  ls examples/meals/?onday.csv
+```  
+
+```
+## Remove "copies" sub-dir to avoid "file alredy exists" problem when re-knitting this doc
+rm -rf examples/copies
+```
+
+
+???
+
+We've already seen one wildcard in the form of the backlash (`\`) that was used to escape spaces in file and folder names, e.g. `$ cd My\ Documents`.
+
+---
+
+# Find
+
+The last command that I want to mention w.r.t. navigation is `find`.
+- This can be used to locate files and directories based on a variety of criteria; from pattern matching to object properties.
+
+```
+find examples -iname "monday.csv" ## will automatically do recursive
+```
+```
+find . -iname "*.txt" ## must use "." to indicate pwd
+```
+```
+find . -size +100k ## find files larger than 100 KB
+```
+---
+
+
+# Working with text files
+
+- Economists and other (data) scientists spend a lot of time working with text, including scripts, Markdown documents, and delimited text files like CSVs. 
+
+- It therefore makes sense to spend a few slides showing off some Bash shell capabilities for working with text files.
+
+- We'll only scratch the surface, but hopefully you'll get an idea of how powerful the shell is in the text domain.
+
+---
+
+# Counting text: wc
+
+You can use the `wc` command to count: 
+  - 1) lines of text, 
+  - 2) the number of words, 
+  - 3) the number of characters.
+
+Let's demonstrate with a text file containing all of Shakespeare's Sonnets
+
+```
+wc examples/sonnets.txt
+```
+
+
+
+--
+
+</br> 
+
+PS — You couldn't tell here, but the character count is actually higher than we'd get if we (bothered) counting by hand, because `wc` counts the invisible newline character "\n".
+
+---
+
+# Reading text
+
+### Read everything: cat
+
+The simplest way to read in text is with the `cat` ("concatenate") command. Note that `cat` will read in *all* of the text. You can scroll back up in your shell window, but this can still be a pain.
+
+Again, let's demonstrate using Shakespeare's Sonnets. (This will overflow the slide.)
+- I'm also going to use the `-n` flag because I want to show line numbers.
+
+--
+
+```
+cat -n examples/sonnets.txt
+```
+
+---
+
+# Reading text (cont.)
+
+### Scroll: more and less
+
+The `more` and `less` commands provide extra functionality over `cat`. For example, they allow you to move through long text one page at a time.
+- Try this yourself with `$ more examples/sonnets.txt`
+- You can move forward and back using the "f" and "b" keys, and quit by hitting "q".
+
+### Preview: head and tail
+
+The `head` and `tail` commands let you limit yourself to a preview of the text, down to a specified number of rows. (The default is 10 rows if you don't specify a number.)
+
+```
+head -n 3 examples/sonnets.txt ## First 3 rows
+# head examples/sonnets.txt ## First 10 rows (default)
+```
+
+---
+
+# Reading text (cont.)
+
+### Preview: head and tail (cont.)
+
+`tail` works very similarly to `head`, but starting from the bottom. For example, we can see the very last row of a file as follows
+
+```
+tail -n 1 examples/sonnets.txt ## Last row
+```
+
+--
+
+However, there's one other neat option that I want to show you. By using the `-n +N` option, we can specify that we want to preview all lines starting from row N *and after*. E.g.
+
+```
+tail -n +3024 examples/sonnets.txt ## Show everything from line 3024
+```
+
+---
+
+# Find patterns: grep
+
+To find patterns in text, we can use regular expression-type matching with `grep`. 
+
+For example, say we want to find the famous opening line to Shakespeare's [Sonnet 18](https://en.wikipedia.org/wiki/Sonnet_18).
+- I'm going to include the `-n` ("number") flag to get the line that it occurs on. 
+
+```
+grep -n "Shall I compare thee" examples/sonnets.txt
+```
+
+--
+
+By default, `grep` returns all matching patterns. 
+- What happens if you run `$ grep -n "summer" examples/sonnets.txt`?
+- Or, for that matter, `$ grep -n "the" examples/sonnets.txt`?
+
+
+---
+
+# Find patterns: grep (cont.)
+
+Note that `grep` can be used to identify patterns in a group files (e.g. within a directory) too.
+ - This is particularly useful if you are trying to identify a file that contain, say, a function name. 
+ 
+Here's a simple example: Which days will I eat pasta this week? 
+ - I'm using the `R` (recursive) and `l` (just list the files; don't print the output) flags.
+
+```
+grep -Rl "pasta" examples/meals
+```
+
+--
+
+What about muesli? And pizza?
+
+--
+
+Take a look at the `grep` man or cheat file for other useful examples and flags
+(e.g. `-i` for ignore case).
+
+PS &mdash; Another cool (and very fast) shell utility along these lines is [the silver searcher](https://github.com/ggreer/the_silver_searcher). Check it out.
+
+---
+
+# Manipulate text: sed and awk
+
+There are two main commands for manipulating text in the shell, namely `sed` and `awk`.
+- Both of these are very powerful and flexible (`awk` is particularly good with CSVs).
+
+I'm going to show two basic examples without going into depth, but I strongly encourage you to explore more on your own. (Mac users: See [here](https://unix.stackexchange.com/questions/13711/differences-between-sed-on-mac-osx-and-other-standard-sed).)
+
+
+
+--
+
+**Example 1.** Replace one text pattern with another.
+
+```
+cat examples/nursery.txt
+```
+
+Now, change "Jack" to "Bill".
+
+```
+sed -i 's/Jack/Bill/g' examples/nursery.txt
+cat examples/nursery.txt
+```
+
+```
+## Change it back for when we want to re-knit the file.
+sed -i 's/Bill/Jack/g' examples/nursery.txt
+```
+
+---
+
+# Manipulate text: sed and awk (cont.)
+
+**Example 2.** Find and count the 10 most commonly used words in Shakespeare's Sonnets.
+- Note: We'll learn more about the pipe operator (`|`) in a few slides.
+
+```
+sed -e 's/\s/\n/g' < examples/sonnets.txt | sort | uniq -c | sort -nr | head -10
+```
+
+--
+
+</br>
+
+PS &mdash; You can also use double quotes (") instead of single ones (') for `sed` and `awk` commands. This can sometimes run you into trouble with special symbols or patterns in the text, though. (Mostly, I want you to be mindful of accidental matching or closing quotation mark pairs.)
+
+---
+
+# Sorting and removing duplicates: sort
+
+We can remove duplicate lines in various ways in Bash, but I'll demonstrate using `sort`.
+
+```
+cat examples/reps.txt
+```
+
+There's a fair bit of repetition in this file (and a double entendre). Let's fix that. 
+- Note the use of the `-u` ("unique") flag to remove duplicates. I'll also add a `-r` ("reverse") flag, but only because `sort` orders alphabetically and this makes less sense for this simple example.
+
+```
+sort -ur examples/reps.txt
+```
+
+
+---
+
+# Redirect: >
+
+You can send output from the shell to a file using the redirect operator `>`
+
+For example, let's print a message to the shell using the `echo` command.
+
+```
+echo "At first, I was afraid, I was petrified"
+```
+
+--
+
+If you wanted to save this output to a file, you need simply redirect it to the filename of choice.
+
+```
+echo "At first, I was afraid, I was petrified" > survive.txt
+find survive.txt ## Show that it now exists
+```
+
+---
+
+# Redirect: > (cont.)
+
+If you want to *append* text to an existing file, then you should use `>>`.
+- Using `>` will try to overwrite the existing file contents.
+
+```
+echo "Kept thinking I could never live without you by my side" >> survive.txt
+cat survive.txt
+```
+
+```
+## Remove file so that we don't keep adding to it when we re-knit these slides
+rm survive.txt
+```
+
+
+Note that you can use this sequence when adding files to your .gitignore. E.g. `$ echo "*.csv" >>  .gitignore`.
+
+---
+
+# Pipes: |
+
+The pipe operator `|` is one of the coolest features in Bash.
+
+- It lets you send (i.e. "pipe") intermediate output to another command.
+
+- In other words, it allows us to chain together a sequence of simple operations and thereby implement a more complex operation. 
+
+Let me demonstrate using a very simple example.
+
+```
+cat -n examples/sonnets.txt | head -n100 | tail -n10
+```
+
+---
+
+# Pipes: | (cont.)
+
+An exercise: Say I want to pull out all of text from (but limited to) Sonnet 18. 
+
+- How might you go about this task using the pipe and other Bash commands?
+
+- Use your knowledge of the starting line (i.e. 336) and the fact that sonnets are 14 lines long.
+
+
+
+```
+tail -n +336 examples/sonnets.txt | head -n14
+```
+
+---
+
+# Pipes: | (cont.)
+
+A final aside about pipe the friends: You can use it to search through your Bash command history. 
+- Every shell command you type is stored in a `~/.bash_history` 
+  - The file might change depending on your preferred shell. E.g. For Zsh it's `~/.zhistory`.
+
+
+What happens if you type `$ cat ~/.bash_history | grep head`?
+
+
+
+
+---
+
+# Iteration:  _for_ loop syntax
+
+_for_ loops in Bash work similarly to other programming languages that you are probably familiar with. 
+
+The basic syntax is 
+
+```bash
+for i in LIST
+do 
+  OPERATION $i ## the $ sign indicates a variable in bash
+done
+```
+
+--
+
+We can also condense things into a single line by using ";" appropriately. 
+
+```bash
+for i in LIST; do OPERATION $i; done
+```
+
+--
+
+The top approach is more readable, but using single line approach saves vertical space.
+
+  - Note: Using ";" isn't limited to _for loops_. Semicolons are a standard way to denote line endings in Bash.
+
+---
+
+# Example 1: Print a sequence of numbers
+
+To help make things concrete, here's a simple _for_ loop in action.
+
+```
+for i in 1 2 3 4 5; do echo $i; done
+```
+
+
+We can use bash's brace expansion (`{1..n}`) to save us from having to write out a long sequence of numbers.
+
+```
+for i in {1..5}; do echo $i; done
+```
+
+---
+
+# Example 2: Combine CSVs
+
+Here's a more realistic _for_ loop use-case that I use quite often: Combining (i.e. concatenating) multiple CSVs. 
+
+--
+
+Say we want to combine all the "daily" files in the `examples/meals` directory into a single CSV, which I'll call `mealplan.csv`. Here's one attempt that incorporates various bash commands and tricks that we've learned so far. The basic idea is:
+1. Create a new (empty) CSV
+2. Then, loop over the relevant input files, appending their contents to our new CSV
+
+```
+touch examples/meals/mealplan.csv 
+for i in $(ls examples/meals/*day.csv)
+do 
+  cat $i >> examples/meals/mealplan.csv
+done
+```
+for i in $(ls examples/meals/*day.csv); do cat $i >> examples/meals/mealplan.csv; done
+```bash
+## create an empty CSV
+$ touch examples/meals/mealplan.csv
+## loop over the input files and append their contents to our new CSV
+$ for i in $(ls examples/meals/*day.csv)
+> do 
+>   cat $i >> examples/meals/mealplan.csv
+> done
+```
+
+--
+
+Did it work? (See next slide.)
+
+---
+
+# Example 2: Combine CSVs (cont.)
+
+```
+cat examples/meals/mealplan.csv
+```
+
+--
+
+Hmmm. Sort of, but we need to get rid of the repeating header. 
+
+--
+
+Can you think of a way? 
+ - Answer on the next slide. (_Hint:_ `tail` and `head`...) 
+
+---
+
+# Example 2: Combine CSVs (cont.)
+
+Let's try again. First delete the old file so we can start afresh.
+```
+rm -f examples/meals/mealplan.csv ## delete old file
+```
+
+--
+
+Here's our adapted gameplan:
+- First, create the new file by grabbing the header (i.e. top line) from any of the input files and redirecting it. No need for `touch` this time.
+- Next, loop over all the input files as before, but this time only append everything _after_ the top line.
+
+```
+head -1 examples/meals/monday.csv > examples/meals/mealplan.csv
+for i in $(ls examples/meals/*day.csv)
+do 
+  tail -n +2 $i >> examples/meals/mealplan.csv
+done
+```
+```bash
+## create a new CSV by redirecting the top line of any file
+$ head -1 examples/meals/monday.csv > examples/meals/mealplan.csv
+## loop over the input files, appending everything after the top line
+$ for i in $(ls examples/meals/*day.csv)
+> do 
+>   tail -n +2 $i >> examples/meals/mealplan.csv
+> done
+```
+
+---
+
+# Example 2: Combine CSVs (cont.)
+
+It worked!
+
+```
+cat examples/meals/mealplan.csv
+```
+
+--
+
+We still have to sort the correct week order, but that's an easy job in R (or Stata, Python, etc.)
+
+- The explicit benefit of doing the concatenating in the shell is it is _much_ more efficient, since all the files don't simultaneously have to be held in memory (i.e RAM). 
+
+- This doesn't matter here, but can make a dramatic difference once we start working with lots of files (or even a few really big ones). We'll revisit this idea later in the big data section of the course.
+
+```
+rm -f examples/meals/mealplan.csv ## Silently remove to avoid errors with later re-knits
+```
+
+
+
+---
+
+# Scripting - Hello World!
+
+Writing code and commands interactively in the shell makes a lot of sense when you are exploring data, file structures, etc.
+
+However, it's also possible (and often desirable) to write reproducible shell scripts that combine a sequence of commands.
+- These scripts are demarcated by their `.sh` file extension.
+
+--
+
+Let's look at the contents of a short shell script that I've included in the examples folder.
+
+```
+cat examples/hello.sh
+```
+
+--
+
+I'm sure that you already have a good idea of what this script is meant to do, but it will prove useful to quickly go through some things together.
+
+---
+
+# Hello World! (cont.)
+
+```bash
+*#!/bin/sh
+echo -e "\nHello World!\n"
+
+```
+
+- `#!/bin/sh` is a [shebang](https://en.wikipedia.org/wiki/Shebang_(Unix), indicating which program to run the command with (here: any Bash-compatible shell). However, it is typically ignored (note that it begins with the hash comment character.)
+
+---
+ 
+
+# Hello World! (cont.)
+
+```bash
+#!/bin/sh
+*echo -e "\nHello World!\n"
+
+```
+
+- `#!/bin/sh` is a [shebang](https://en.wikipedia.org/wiki/Shebang_(Unix), indicating which program to run the command with (here: any Bash-compatible shell). However, it is typically ignored (note that it begins with the hash comment character.)
+- `echo -e "\nHello World!\n"` is the actual command that we want to run.
+
+---
+ 
+
+# Hello World! (cont.)
+
+```bash
+#!/bin/sh
+echo -e "\nHello World!\n"
+
+```
+
+- `#!/bin/sh` is a [shebang](https://en.wikipedia.org/wiki/Shebang_(Unix), indicating which program to run the command with (here: any Bash-compatible shell). However, it is typically ignored (note that it begins with the hash comment character.)
+- `echo -e "\nHello World!\n"` is the actual command that we want to run. The `-e` flag tells bash that we want to evaluate an expression rather than a file.
+
+To run this simple script, you can just type in the file name and press enter.
+
+```
+examples/hello.sh
+# bash examples/hello.sh ## Also works
+```
+
+---
+
+# Rscript
+
+- You aren't limited to running shell scripts in the shell. 
+
+- The exact same principles carry over to other programs and files.
+
+The most relevant case for this class is the [`Rscript`](https://stat.ethz.ch/R-manual/R-devel/library/utils/html/Rscript.html) command for (you guessed it) executing R scripts and expressions. For example:
+
+```
+Rscript -e "cat('Hello World, from R!')"
+```
+
+--
+
+Of course, the more typical `Rscript` use case is to execute full length R scripts. An optional, but very useful feature here is the ability to pass extra arguments from the shell to your R script. Consider the `hello.R` script that I've bundled in the examples folder.
+
+```
+cat examples/hello.R
+```
+
+---
+
+# Rscript (cont.)
+
+The key step for using additional `Rscript` arguments is held within the top two lines.
+
+```r
+args = commandArgs(trailingOnly = TRUE)
+i = args[1]; j = args[2]
+```
+These tell Rscript to capture any trailing arguments (i.e. after the file name) and then pass them on as objects that can be used within R. 
+
+--
+
+Let's run the script to see it in action.
+
+```
+Rscript examples/hello.R 12 9
+```
+
+--
+
+Again, including trailing arguments is entirely optional. You could run `Rscript myfile.R` without any problems. But it often proves very useful for the type of work that you'd likely be using `Rscript` for (e.g. batching big jobs).
+
+---
+
+# Editing and writing scripts in the shell
+
+Say you want to edit the `hello.sh` script. 
+
+- Maybe you want to add some additional lines of text, or maybe you're bothered by the fact that there should be a comma after "Hello". (It's a salutation!) 
+
+We have already seen how to append text lines to a file. But when it comes to more complicated editing work, you're better off using a dedicated shell editor.
+
+- I use [**vim**](https://missing.csail.mit.edu/2020/editors/). Extremely powerful, but a steep learning curve.
+
+- An easier starting point is [**nano**](https://www.nano-editor.org/). (**Windows users**, see [here](https://stackoverflow.com/questions/36802996/bash-nano-command-not-found-at-windows-git-bash).)
+
+Open up my script in nano by typing `$ nano examples/hello.sh`. 
+
+- Note that the functionality is more limited than a normal text editor.
+
+- Once you are finished editing, hit "Ctrl+X", then "y" and enter to exit.
+
+- Finally, run the edited version of the script.
+
+
+---
+
+# Workspace for Data Work
+
+- So what constitutes the right workspace for your research project?
+
+- The right answer is probably it depends but maybe not
+
+- All data-driven projects are essentially the same
+
+- They take in raw data, transform it, estimate models and produce outputs
+
+- Sticking to a given structure can make you more productive
+  - Adam Smith anyone?
+  
+---
+
+# Cookiecutter
+
+- We will discuss a possible structure using [Cookiecutter](https://cookiecutter.readthedocs.io/en/1.7.3/README.html)
+
+- Cookiecutter is command-line utility that creates projects from cookiecutters [project templates](https://cookiecutter.readthedocs.io/en/1.7.3/README.html#available-cookiecutters)
+
+- One such template is: [Cookiecutter Data Science](https://drivendata.github.io/cookiecutter-data-science/?#directory-structure)
+
+---
+
+# Install Cookiecutter
+
+You can install Cookiecutter many [different ways](https://cookiecutter.readthedocs.io/en/1.7.3/installation.html)
+
+But we will use Python 
+
+```bash
+pip install cookiecutter
+```
+
+---
+# Start a New Project
+
+- Create a new Github repo
+
+- Using Github desktop clone it to your local computer
+
+- Now use the Data Science template from the command line:
+
+```
+cookiecutter https://github.com/drivendata/cookiecutter-data-science
+
+```
+
+- Fill out the questions
+
+- You now have a nice structured work following this [structure](https://drivendata.github.io/cookiecutter-data-science/?#directory-structure)
+
+---
+
+# Work Environment
+
+- You now have an entire work environment that make reproducibility extremely easy
+
+- You need change directory only once to the top folder
+
+- Then use relative paths in your code
+
+- It also means that you will be able to use this environment on the cloud
+
+---
+
+# Working in the environment
+
+- Let's use the Titanic dataset: https://www.dropbox.com/s/d4kdi9jndh9xde4/titanic.csv?dl=1
+
+- Let's start coding in your Notebook of choice
+
+---
+
+# Suggestions
+
+- You want to keep the raw file intact
+  - It is usally large so you don't want to have to download it again if you made mistake
+  - Don't make a copy either
+  
+- If all your data are in the data folder by default then you can add the folder to .gitignore file
+
+--- 
+
+# Unit testing
+
+- Unit testing is a technique coming from computer science
+
+- It consists in insuring their functions indeed have the behavior they are expected to have
+  - They test extreme values, different data types etc.
+
+- Programmers tend to use much more explicitly than we do functions
+
+- Yet you can (and should) think of your dofiles as (potentially gigantic) functions
+  - A function returning a transformed dataset
+  - A function returning regressions
+  - A function returning figures etc
+  
+- [R](https://testthat.r-lib.org/), [Python](https://docs.pytest.org/en/6.2.x/) have terrific tools to perform unit testing
+  - Even [Stata](https://www.btskinner.io/code/stata-unit-testing/)!
+  
+---
+
+# Unit testing philisophy
+
+- Programs are doing what they are supposed to do not what you hope they do
+
+- It's easy to ignore some mistakes
+  - e.g. generate a control variable with missing values which drops observations when running a regression
+  
+- Your unit testing doesn't have to be as bullet proof as programmers from Facebook...
+
+- But it is an opportunity to keep track of the major changes your code has made on the raw dataset
+
